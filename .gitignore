@@ -1,0 +1,12 @@
+build/
+build-*/
+out/
+*.pyc
+*.swp
+compile_commands.json
+.ycm_extra_conf.py
+cscope.*
+third_party/tint
+android_test/libs
+android_test/include
+.DS_Store
