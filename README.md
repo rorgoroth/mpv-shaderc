@@ -8,6 +8,6 @@ Current: v2021.3
 | lib           | rev                                      |
 |:--------------|:----------------------------------------:|
 | shaderc       | 8ec41953c45630e56b33d2ef0ab17c6e933f6e5f |
-| glslang       | 600c5037baac82a80851d1fb95f3f09d34bb43e8 |
+| glslang       | 9448de56b320b028e6c301a6b117a166187b7f76 |
 | spirv-headers | 814e728b30ddd0f4509233099a3ad96fd4318c07 |
 | spirv-tools   | ab8eb607750208066e2d57eff6a34dbaf05f5ada |

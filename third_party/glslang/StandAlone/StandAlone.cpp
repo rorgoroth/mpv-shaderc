@@ -177,6 +177,7 @@ const char* shaderStageName = nullptr;
 const char* variableName = nullptr;
 bool HlslEnable16BitTypes = false;
 bool HlslDX9compatible = false;
+bool HlslDxPositionW = false;
 bool DumpBuiltinSymbols = false;
 std::vector<std::string> IncludeDirectoryList;
 
@@ -662,6 +663,8 @@ void ProcessArguments(std::vector<std::unique_ptr<glslang::TWorkItem>>& workItem
                         HlslEnable16BitTypes = true;
                     } else if (lowerword == "hlsl-dx9-compatible") {
                         HlslDX9compatible = true;
+                    } else if (lowerword == "hlsl-dx-position-w") {
+                        HlslDxPositionW = true;
                     } else if (lowerword == "auto-sampled-textures") { 
                         autoSampledTextures = true;
                     } else if (lowerword == "invert-y" ||  // synonyms
@@ -764,6 +767,9 @@ void ProcessArguments(std::vector<std::unique_ptr<glslang::TWorkItem>>& workItem
                             } else if (strcmp(argv[1], "vulkan1.2") == 0) {
                                 setVulkanSpv();
                                 ClientVersion = glslang::EShTargetVulkan_1_2;
+                            } else if (strcmp(argv[1], "vulkan1.3") == 0) {
+                                setVulkanSpv();
+                                ClientVersion = glslang::EShTargetVulkan_1_3;
                             } else if (strcmp(argv[1], "opengl") == 0) {
                                 setOpenGlSpv();
                                 ClientVersion = glslang::EShTargetOpenGL_450;
@@ -785,9 +791,13 @@ void ProcessArguments(std::vector<std::unique_ptr<glslang::TWorkItem>>& workItem
                             } else if (strcmp(argv[1], "spirv1.5") == 0) {
                                 TargetLanguage = glslang::EShTargetSpv;
                                 TargetVersion = glslang::EShTargetSpv_1_5;
+                            } else if (strcmp(argv[1], "spirv1.6") == 0) {
+                                TargetLanguage = glslang::EShTargetSpv;
+                                TargetVersion = glslang::EShTargetSpv_1_6;
                             } else
-                                Error("--target-env expected one of: vulkan1.0, vulkan1.1, vulkan1.2, opengl,\n"
-                                      "spirv1.0, spirv1.1, spirv1.2, spirv1.3, spirv1.4, or spirv1.5");
+                                Error("--target-env expected one of: vulkan1.0, vulkan1.1, vulkan1.2,\n"
+                                      "vulkan1.3, opengl, spirv1.0, spirv1.1, spirv1.2, spirv1.3,\n"
+                                      "spirv1.4, spirv1.5 or spirv1.6");
                         }
                         bumpArg();
                     } else if (lowerword == "undef-macro" ||
@@ -1011,6 +1021,10 @@ void ProcessArguments(std::vector<std::unique_ptr<glslang::TWorkItem>>& workItem
         case glslang::EShTargetVulkan_1_2:
             TargetLanguage = glslang::EShTargetSpv;
             TargetVersion = glslang::EShTargetSpv_1_5;
+            break;
+        case glslang::EShTargetVulkan_1_3:
+            TargetLanguage = glslang::EShTargetSpv;
+            TargetVersion = glslang::EShTargetSpv_1_6;
             break;
         case glslang::EShTargetOpenGL_450:
             TargetLanguage = glslang::EShTargetSpv;
@@ -1283,6 +1297,9 @@ void CompileAndLinkShaderUnits(std::vector<ShaderCompUnit> compUnits)
 
         if (Options & EOptionInvertY)
             shader->setInvertY(true);
+
+        if (HlslDxPositionW)
+            shader->setDxPositionW(true);
 
         // Set up the environment, some subsettings take precedence over earlier
         // ways of setting things.
@@ -1847,6 +1864,8 @@ void usage()
            "  --hlsl-dx9-compatible             interprets sampler declarations as a\n"
            "                                    texture/sampler combo like DirectX9 would,\n"
            "                                    and recognizes DirectX9-specific semantics\n"
+           "  --hlsl-dx-position-w              W component of SV_Position in HLSL fragment\n"
+           "                                    shaders compatible with DirectX\n"
            "  --invert-y | --iy                 invert position.Y output in vertex shader\n"
            "  --keep-uncalled | --ku            don't eliminate uncalled functions\n"
            "  --nan-clamp                       favor non-NaN operand in min, max, and clamp\n"
@@ -1922,8 +1941,9 @@ void usage()
            "  --sep                             synonym for --source-entrypoint\n"
            "  --stdin                           read from stdin instead of from a file;\n"
            "                                    requires providing the shader stage using -S\n"
-           "  --target-env {vulkan1.0 | vulkan1.1 | vulkan1.2 | opengl | \n"
-           "                spirv1.0 | spirv1.1 | spirv1.2 | spirv1.3 | spirv1.4 | spirv1.5}\n"
+           "  --target-env {vulkan1.0 | vulkan1.1 | vulkan1.2 | vulkan1.3 | opengl |\n"
+           "                spirv1.0 | spirv1.1 | spirv1.2 | spirv1.3 | spirv1.4 |\n"
+           "                spirv1.5 | spirv1.6}\n"
            "                                    Set the execution environment that the\n"
            "                                    generated code will be executed in.\n"
            "                                    Defaults to:\n"
@@ -1932,6 +1952,7 @@ void usage()
            "                                     * spirv1.0  under --target-env vulkan1.0\n"
            "                                     * spirv1.3  under --target-env vulkan1.1\n"
            "                                     * spirv1.5  under --target-env vulkan1.2\n"
+           "                                     * spirv1.6  under --target-env vulkan1.3\n"
            "                                    Multiple --target-env can be specified.\n"
            "  --variable-name <name>\n"
            "  --vn <name>                       creates a C header file that contains a\n"
