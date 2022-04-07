@@ -106,6 +106,7 @@ SPVTOOLS_OPT_SRC_FILES := \
 		source/opt/eliminate_dead_constant_pass.cpp \
 		source/opt/eliminate_dead_functions_pass.cpp \
 		source/opt/eliminate_dead_functions_util.cpp \
+		source/opt/eliminate_dead_input_components_pass.cpp \
 		source/opt/eliminate_dead_members_pass.cpp \
 		source/opt/feature_manager.cpp \
 		source/opt/fix_storage_class.cpp \
@@ -156,6 +157,7 @@ SPVTOOLS_OPT_SRC_FILES := \
 		source/opt/redundancy_elimination.cpp \
 		source/opt/register_pressure.cpp \
 		source/opt/relax_float_ops_pass.cpp \
+		source/opt/remove_dontinline_pass.cpp \
 		source/opt/remove_duplicates_pass.cpp \
 		source/opt/remove_unused_interface_variables_pass.cpp \
 		source/opt/replace_desc_array_access_using_var_index.cpp \
