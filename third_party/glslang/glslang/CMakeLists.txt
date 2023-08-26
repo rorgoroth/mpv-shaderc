@@ -33,7 +33,7 @@
 
 if(WIN32)
     add_subdirectory(OSDependent/Windows)
-elseif(UNIX OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Fuchsia")
+elseif(UNIX OR "${CMAKE_SYSTEM_NAME}" STREQUAL "Fuchsia" OR ANDROID)
     add_subdirectory(OSDependent/Unix)
 else()
     message("unknown platform")
@@ -57,7 +57,6 @@ set_property(TARGET GenericCodeGen PROPERTY FOLDER glslang)
 # MachineIndependent
 ################################################################################
 set(MACHINEINDEPENDENT_SOURCES
-    MachineIndependent/glslang.m4
     MachineIndependent/glslang.y
     MachineIndependent/glslang_tab.cpp
     MachineIndependent/attribute.cpp
@@ -196,7 +195,7 @@ set(RESOURCELIMITS_HEADERS
   Public/resource_limits_c.h
 )
 
-add_library(glslang-default-resource-limits ${RESOURCELIMITS_SOURCES} ${RESOURCELIMITS_HEADERS})
+add_library(glslang-default-resource-limits STATIC ${RESOURCELIMITS_SOURCES} ${RESOURCELIMITS_HEADERS})
 set_target_properties(glslang-default-resource-limits PROPERTIES
     VERSION "${GLSLANG_VERSION}"
     SOVERSION "${GLSLANG_VERSION_MAJOR}"

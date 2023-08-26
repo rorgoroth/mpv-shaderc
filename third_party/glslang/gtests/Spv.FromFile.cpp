@@ -345,6 +345,12 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.conversion.frag",
         "spv.coopmat.comp",
         "spv.coopmat_Error.comp",
+        "spv.coopmatKHR.comp",
+        "spv.coopmatKHR_arithmetic.comp",
+        "spv.coopmatKHR_arithmeticError.comp",
+        "spv.coopmatKHR_Error.comp",
+        "spv.coopmatKHR_constructor.comp",
+        "spv.coopmatKHR_constructorError.comp",
         "spv.dataOut.frag",
         "spv.dataOutIndirect.frag",
         "spv.dataOutIndirect.vert",
@@ -398,6 +404,7 @@ INSTANTIATE_TEST_SUITE_P(
         "spv.intrinsicsSpirvStorageClass.rchit",
         "spv.intrinsicsSpirvType.rgen",
         "spv.intrinsicsSpirvTypeLocalVar.vert",
+        "spv.intrinsicsSpirvTypeWithTypeSpecifier.vert",
         "spv.invariantAll.vert",
         "spv.layer.tese",
         "spv.layoutNested.vert",
@@ -653,6 +660,7 @@ INSTANTIATE_TEST_SUITE_P(
 
         // SPV_EXT_mesh_shader
         "spv.ext.meshShaderBuiltins.mesh",
+        "spv.ext.meshShaderBuiltinsShadingRate.mesh",
         "spv.ext.meshShaderRedeclBuiltins.mesh",
         "spv.ext.meshShaderTaskMem.mesh",
         "spv.ext.meshShaderUserDefined.mesh",
