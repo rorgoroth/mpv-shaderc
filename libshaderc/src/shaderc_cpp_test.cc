@@ -545,7 +545,8 @@ TEST_F(CppInterface, CompileAndOptimizeForVulkan10Failure) {
               // TODO(antiagainst): the error message can be improved to be more
               // explicit regarding Vulkan 1.1
               HasSubstr("compilation succeeded but failed to optimize: "
-                        "Invalid capability operand"));
+                        "Capability GroupNonUniform is not allowed by Vulkan "
+                        "1.0 specification (or requires extension)"));
 }
 
 TEST_F(CppInterface, CompileAndOptimizeForVulkan11Success) {
@@ -664,7 +665,7 @@ TEST_F(CppInterface, PreprocessingOnlyOption) {
   const PreprocessedSourceCompilationResult result = compiler_.PreprocessGlsl(
       kMinimalShaderWithMacro, shaderc_glsl_vertex_shader, "shader", options_);
   EXPECT_TRUE(CompilationResultIsSuccess(result));
-  EXPECT_THAT(CompilerOutputAsString(result), HasSubstr("void main(){ }"));
+  EXPECT_THAT(CompilerOutputAsString(result), HasSubstr("void main() { }"));
 
   const std::string kMinimalShaderCloneOption =
       "#version 140\n"
@@ -677,7 +678,7 @@ TEST_F(CppInterface, PreprocessingOnlyOption) {
                                cloned_options);
   EXPECT_TRUE(CompilationResultIsSuccess(result_from_cloned_options));
   EXPECT_THAT(CompilerOutputAsString(result_from_cloned_options),
-              HasSubstr("void main(){ }"));
+              HasSubstr("void main() { }"));
 }
 
 // A shader kind test case needs: 1) A shader text with or without #pragma
