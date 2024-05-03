@@ -1,5 +1,9 @@
 Revision history for Shaderc
 
+v2024.1
+ - Update dependencies
+ - Propagate test/install options to Glslang
+
 v2024.0
  - Update dependencies
  - Utilities:

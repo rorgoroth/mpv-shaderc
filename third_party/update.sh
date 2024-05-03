@@ -1,9 +1,9 @@
 #!/bin/sh
 
-SHADERC="d792558a8902cb39b1c237243cc4edab226513a5"
-GLSLANG="d73712b8f6c9047b09e99614e20d456d5ada2390"
-SPIRVHEADERS="8b246ff75c6615ba4532fe4fde20f1be090c3764"
-SPIRVTOOLS="04896c462d9f3f504c99a4698605b6524af813c1"
+SHADERC="47a9387ef5b3600d30d84c71ec77a59dc7db46fa"
+GLSLANG="142052fa30f9eca191aa9dcf65359fcaed09eeec"
+SPIRVHEADERS="5e3ad389ee56fca27c9705d093ae5387ce404df4"
+SPIRVTOOLS="dd4b663e13c07fea4fbb3f70c1c91c86731099f7"
 
 rm -- *.tar.gz
 
@@ -30,6 +30,5 @@ mv SPIRV-Tools-"$SPIRVTOOLS" spirv-tools
 rm shaderc/.gitignore
 rm shaderc/README.md
 rm -rf shaderc/.github
-#rm -rf shaderc/third_party
 
 rm -- *.tar.gz
