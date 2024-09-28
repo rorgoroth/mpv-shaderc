@@ -1,9 +1,9 @@
 #!/bin/sh
 
-SHADERC="3ac03b8ad85a8e328a6182cddee8d05810bd5a2c"
-GLSLANG="fa9c3deb49e035a8abcabe366f26aac010f6cbfb"
-SPIRVHEADERS="2acb319af38d43be3ea76bfabf3998e5281d8d12"
-SPIRVTOOLS="0cfe9e7219148716dfd30b37f4d21753f098707a"
+SHADERC="ff84893dd52d28f0b1737d2635733d952013bd9c"
+GLSLANG="467ce01c71e38cf01814c48987a5c0dadd914df4"
+SPIRVHEADERS="2a9b6f951c7d6b04b6c21fe1bf3f475b68b84801"
+SPIRVTOOLS="01c8438ee4ac52c248119b7e03e0b021f853b51a"
 
 rm -- *.tar.gz
 
@@ -27,11 +27,11 @@ mv shaderc-"$SHADERC" shaderc
 mv SPIRV-Headers-"$SPIRVHEADERS" spirv-headers
 mv SPIRV-Tools-"$SPIRVTOOLS" spirv-tools
 
-rm -rf shaderc/.gitignore
 rm -rf shaderc/.github
+rm -rf shaderc/.gitignore
 rm shaderc/.clang-format
-rm shaderc/AUTHORS
 rm shaderc/Android.mk
+rm shaderc/AUTHORS
 rm shaderc/BUILD.gn
 rm shaderc/CONTRIBUTING.md
 rm shaderc/CONTRIBUTORS
@@ -40,5 +40,6 @@ rm shaderc/DEVELOPMENT.howto.md
 rm shaderc/Dockerfile
 rm shaderc/downloads.md
 rm shaderc/license-checker.cfg
+rm shaderc/README.md
 
 rm -- *.tar.gz
