@@ -78,6 +78,7 @@ typedef enum SpvSourceLanguage_ {
     SpvSourceLanguageWGSL = 10,
     SpvSourceLanguageSlang = 11,
     SpvSourceLanguageZig = 12,
+    SpvSourceLanguageRust = 13,
     SpvSourceLanguageMax = 0x7fffffff,
 } SpvSourceLanguage;
 
@@ -1254,6 +1255,10 @@ typedef enum SpvCapability_ {
     SpvCapabilityGlobalVariableHostAccessINTEL = 6187,
     SpvCapabilityGlobalVariableFPGADecorationsINTEL = 6189,
     SpvCapabilitySubgroupBufferPrefetchINTEL = 6220,
+    SpvCapabilitySubgroup2DBlockIOINTEL = 6228,
+    SpvCapabilitySubgroup2DBlockTransformINTEL = 6229,
+    SpvCapabilitySubgroup2DBlockTransposeINTEL = 6230,
+    SpvCapabilitySubgroupMatrixMultiplyAccumulateINTEL = 6236,
     SpvCapabilityGroupUniformArithmeticKHR = 6400,
     SpvCapabilityMaskedGatherScatterINTEL = 6427,
     SpvCapabilityCacheControlsINTEL = 6441,
@@ -1467,6 +1472,42 @@ typedef enum SpvNamedMaximumNumberOfRegisters_ {
     SpvNamedMaximumNumberOfRegistersAutoINTEL = 0,
     SpvNamedMaximumNumberOfRegistersMax = 0x7fffffff,
 } SpvNamedMaximumNumberOfRegisters;
+
+typedef enum SpvMatrixMultiplyAccumulateOperandsShift_ {
+    SpvMatrixMultiplyAccumulateOperandsMatrixASignedComponentsINTELShift = 0,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBSignedComponentsINTELShift = 1,
+    SpvMatrixMultiplyAccumulateOperandsMatrixCBFloat16INTELShift = 2,
+    SpvMatrixMultiplyAccumulateOperandsMatrixResultBFloat16INTELShift = 3,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedInt8INTELShift = 4,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedInt8INTELShift = 5,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedInt4INTELShift = 6,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedInt4INTELShift = 7,
+    SpvMatrixMultiplyAccumulateOperandsMatrixATF32INTELShift = 8,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBTF32INTELShift = 9,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedFloat16INTELShift = 10,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedFloat16INTELShift = 11,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedBFloat16INTELShift = 12,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedBFloat16INTELShift = 13,
+    SpvMatrixMultiplyAccumulateOperandsMax = 0x7fffffff,
+} SpvMatrixMultiplyAccumulateOperandsShift;
+
+typedef enum SpvMatrixMultiplyAccumulateOperandsMask_ {
+    SpvMatrixMultiplyAccumulateOperandsMaskNone = 0,
+    SpvMatrixMultiplyAccumulateOperandsMatrixASignedComponentsINTELMask = 0x00000001,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBSignedComponentsINTELMask = 0x00000002,
+    SpvMatrixMultiplyAccumulateOperandsMatrixCBFloat16INTELMask = 0x00000004,
+    SpvMatrixMultiplyAccumulateOperandsMatrixResultBFloat16INTELMask = 0x00000008,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedInt8INTELMask = 0x00000010,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedInt8INTELMask = 0x00000020,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedInt4INTELMask = 0x00000040,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedInt4INTELMask = 0x00000080,
+    SpvMatrixMultiplyAccumulateOperandsMatrixATF32INTELMask = 0x00000100,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBTF32INTELMask = 0x00000200,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedFloat16INTELMask = 0x00000400,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedFloat16INTELMask = 0x00000800,
+    SpvMatrixMultiplyAccumulateOperandsMatrixAPackedBFloat16INTELMask = 0x00001000,
+    SpvMatrixMultiplyAccumulateOperandsMatrixBPackedBFloat16INTELMask = 0x00002000,
+} SpvMatrixMultiplyAccumulateOperandsMask;
 
 typedef enum SpvRawAccessChainOperandsShift_ {
     SpvRawAccessChainOperandsRobustnessPerComponentNVShift = 0,
@@ -2245,6 +2286,12 @@ typedef enum SpvOp_ {
     SpvOpControlBarrierWaitINTEL = 6143,
     SpvOpArithmeticFenceEXT = 6145,
     SpvOpSubgroupBlockPrefetchINTEL = 6221,
+    SpvOpSubgroup2DBlockLoadINTEL = 6231,
+    SpvOpSubgroup2DBlockLoadTransformINTEL = 6232,
+    SpvOpSubgroup2DBlockLoadTransposeINTEL = 6233,
+    SpvOpSubgroup2DBlockPrefetchINTEL = 6234,
+    SpvOpSubgroup2DBlockStoreINTEL = 6235,
+    SpvOpSubgroupMatrixMultiplyAccumulateINTEL = 6237,
     SpvOpGroupIMulKHR = 6401,
     SpvOpGroupFMulKHR = 6402,
     SpvOpGroupBitwiseAndKHR = 6403,
@@ -2795,7 +2842,7 @@ inline void SpvHasResultAndType(SpvOp opcode, bool *hasResult, bool *hasResultTy
     case SpvOpUMul32x16INTEL: *hasResult = true; *hasResultType = true; break;
     case SpvOpConstantFunctionPointerINTEL: *hasResult = true; *hasResultType = true; break;
     case SpvOpFunctionPointerCallINTEL: *hasResult = true; *hasResultType = true; break;
-    case SpvOpAsmTargetINTEL: *hasResult = true; *hasResultType = true; break;
+    case SpvOpAsmTargetINTEL: *hasResult = true; *hasResultType = false; break;
     case SpvOpAsmINTEL: *hasResult = true; *hasResultType = true; break;
     case SpvOpAsmCallINTEL: *hasResult = true; *hasResultType = true; break;
     case SpvOpAtomicFMinEXT: *hasResult = true; *hasResultType = true; break;
@@ -3015,6 +3062,12 @@ inline void SpvHasResultAndType(SpvOp opcode, bool *hasResult, bool *hasResultTy
     case SpvOpControlBarrierWaitINTEL: *hasResult = false; *hasResultType = false; break;
     case SpvOpArithmeticFenceEXT: *hasResult = true; *hasResultType = true; break;
     case SpvOpSubgroupBlockPrefetchINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroup2DBlockLoadINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroup2DBlockLoadTransformINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroup2DBlockLoadTransposeINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroup2DBlockPrefetchINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroup2DBlockStoreINTEL: *hasResult = false; *hasResultType = false; break;
+    case SpvOpSubgroupMatrixMultiplyAccumulateINTEL: *hasResult = true; *hasResultType = true; break;
     case SpvOpGroupIMulKHR: *hasResult = true; *hasResultType = true; break;
     case SpvOpGroupFMulKHR: *hasResult = true; *hasResultType = true; break;
     case SpvOpGroupBitwiseAndKHR: *hasResult = true; *hasResultType = true; break;
@@ -3042,6 +3095,7 @@ inline const char* SpvSourceLanguageToString(SpvSourceLanguage value) {
     case SpvSourceLanguageWGSL: return "WGSL";
     case SpvSourceLanguageSlang: return "Slang";
     case SpvSourceLanguageZig: return "Zig";
+    case SpvSourceLanguageRust: return "Rust";
     default: return "Unknown";
     }
 }
@@ -3946,6 +4000,10 @@ inline const char* SpvCapabilityToString(SpvCapability value) {
     case SpvCapabilityGlobalVariableHostAccessINTEL: return "GlobalVariableHostAccessINTEL";
     case SpvCapabilityGlobalVariableFPGADecorationsINTEL: return "GlobalVariableFPGADecorationsINTEL";
     case SpvCapabilitySubgroupBufferPrefetchINTEL: return "SubgroupBufferPrefetchINTEL";
+    case SpvCapabilitySubgroup2DBlockIOINTEL: return "Subgroup2DBlockIOINTEL";
+    case SpvCapabilitySubgroup2DBlockTransformINTEL: return "Subgroup2DBlockTransformINTEL";
+    case SpvCapabilitySubgroup2DBlockTransposeINTEL: return "Subgroup2DBlockTransposeINTEL";
+    case SpvCapabilitySubgroupMatrixMultiplyAccumulateINTEL: return "SubgroupMatrixMultiplyAccumulateINTEL";
     case SpvCapabilityGroupUniformArithmeticKHR: return "GroupUniformArithmeticKHR";
     case SpvCapabilityMaskedGatherScatterINTEL: return "MaskedGatherScatterINTEL";
     case SpvCapabilityCacheControlsINTEL: return "CacheControlsINTEL";
@@ -4859,6 +4917,12 @@ inline const char* SpvOpToString(SpvOp value) {
     case SpvOpControlBarrierWaitINTEL: return "OpControlBarrierWaitINTEL";
     case SpvOpArithmeticFenceEXT: return "OpArithmeticFenceEXT";
     case SpvOpSubgroupBlockPrefetchINTEL: return "OpSubgroupBlockPrefetchINTEL";
+    case SpvOpSubgroup2DBlockLoadINTEL: return "OpSubgroup2DBlockLoadINTEL";
+    case SpvOpSubgroup2DBlockLoadTransformINTEL: return "OpSubgroup2DBlockLoadTransformINTEL";
+    case SpvOpSubgroup2DBlockLoadTransposeINTEL: return "OpSubgroup2DBlockLoadTransposeINTEL";
+    case SpvOpSubgroup2DBlockPrefetchINTEL: return "OpSubgroup2DBlockPrefetchINTEL";
+    case SpvOpSubgroup2DBlockStoreINTEL: return "OpSubgroup2DBlockStoreINTEL";
+    case SpvOpSubgroupMatrixMultiplyAccumulateINTEL: return "OpSubgroupMatrixMultiplyAccumulateINTEL";
     case SpvOpGroupIMulKHR: return "OpGroupIMulKHR";
     case SpvOpGroupFMulKHR: return "OpGroupFMulKHR";
     case SpvOpGroupBitwiseAndKHR: return "OpGroupBitwiseAndKHR";

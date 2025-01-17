@@ -2,11 +2,11 @@
 
 This is only for building mpv with [mingw-cmake-env](https://github.com/rorgoroth/mingw-cmake-env) and this repo is only updated with [known_good](https://github.com/google/shaderc/blob/known-good/known_good.json) or release revisions.
 
-Current: v2024.4
+Current: v2024.4 + 2025_01_17
 
 | lib                                                               | rev                                      |
 |:------------------------------------------------------------------|:----------------------------------------:|
-| [shaderc](https://github.com/google/shaderc)                      | caa54d9779d5605aca4e1a0c0c962a3d8f4aeb31 |
-| [glslang](https://github.com/KhronosGroup/glslang)                | a0995c49ebcaca2c6d3b03efbabf74f3843decdb |
-| [spirv-headers](https://github.com/KhronosGroup/SPIRV-Headers)    | 3f17b2af6784bfa2c5aa5dbb8e0e74a607dd8b3b |
-| [spirv-tools](https://github.com/KhronosGroup/SPIRV-Tools)        | 4d2f0b40bfe290dea6c6904dafdf7fd8328ba346 |
+| [shaderc](https://github.com/google/shaderc)                      | 3158c54654b2d9589f402fa27aa7e28438fd6333 |
+| [glslang](https://github.com/KhronosGroup/glslang)                | 8b0e7b6e839279f4547bf0bb14466c42d9869498 |
+| [spirv-headers](https://github.com/KhronosGroup/SPIRV-Headers)    | 2b2e05e088841c63c0b6fd4c9fb380d8688738d3 |
+| [spirv-tools](https://github.com/KhronosGroup/SPIRV-Tools)        | f942f65e8b3e5a6cc85ce8d85f27556674d30289 |

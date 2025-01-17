@@ -65,6 +65,7 @@ spv = {
         'WGSL' : 10,
         'Slang' : 11,
         'Zig' : 12,
+        'Rust' : 13,
     },
 
     'ExecutionModel' : {
@@ -1212,6 +1213,10 @@ spv = {
         'GlobalVariableHostAccessINTEL' : 6187,
         'GlobalVariableFPGADecorationsINTEL' : 6189,
         'SubgroupBufferPrefetchINTEL' : 6220,
+        'Subgroup2DBlockIOINTEL' : 6228,
+        'Subgroup2DBlockTransformINTEL' : 6229,
+        'Subgroup2DBlockTransposeINTEL' : 6230,
+        'SubgroupMatrixMultiplyAccumulateINTEL' : 6236,
         'GroupUniformArithmeticKHR' : 6400,
         'MaskedGatherScatterINTEL' : 6427,
         'CacheControlsINTEL' : 6441,
@@ -1402,6 +1407,41 @@ spv = {
 
     'NamedMaximumNumberOfRegisters' : {
         'AutoINTEL' : 0,
+    },
+
+    'MatrixMultiplyAccumulateOperandsShift' : {
+        'MatrixASignedComponentsINTEL' : 0,
+        'MatrixBSignedComponentsINTEL' : 1,
+        'MatrixCBFloat16INTEL' : 2,
+        'MatrixResultBFloat16INTEL' : 3,
+        'MatrixAPackedInt8INTEL' : 4,
+        'MatrixBPackedInt8INTEL' : 5,
+        'MatrixAPackedInt4INTEL' : 6,
+        'MatrixBPackedInt4INTEL' : 7,
+        'MatrixATF32INTEL' : 8,
+        'MatrixBTF32INTEL' : 9,
+        'MatrixAPackedFloat16INTEL' : 10,
+        'MatrixBPackedFloat16INTEL' : 11,
+        'MatrixAPackedBFloat16INTEL' : 12,
+        'MatrixBPackedBFloat16INTEL' : 13,
+    },
+
+    'MatrixMultiplyAccumulateOperandsMask' : {
+        'MaskNone' : 0,
+        'MatrixASignedComponentsINTEL' : 0x00000001,
+        'MatrixBSignedComponentsINTEL' : 0x00000002,
+        'MatrixCBFloat16INTEL' : 0x00000004,
+        'MatrixResultBFloat16INTEL' : 0x00000008,
+        'MatrixAPackedInt8INTEL' : 0x00000010,
+        'MatrixBPackedInt8INTEL' : 0x00000020,
+        'MatrixAPackedInt4INTEL' : 0x00000040,
+        'MatrixBPackedInt4INTEL' : 0x00000080,
+        'MatrixATF32INTEL' : 0x00000100,
+        'MatrixBTF32INTEL' : 0x00000200,
+        'MatrixAPackedFloat16INTEL' : 0x00000400,
+        'MatrixBPackedFloat16INTEL' : 0x00000800,
+        'MatrixAPackedBFloat16INTEL' : 0x00001000,
+        'MatrixBPackedBFloat16INTEL' : 0x00002000,
     },
 
     'RawAccessChainOperandsShift' : {
@@ -2179,6 +2219,12 @@ spv = {
         'OpControlBarrierWaitINTEL' : 6143,
         'OpArithmeticFenceEXT' : 6145,
         'OpSubgroupBlockPrefetchINTEL' : 6221,
+        'OpSubgroup2DBlockLoadINTEL' : 6231,
+        'OpSubgroup2DBlockLoadTransformINTEL' : 6232,
+        'OpSubgroup2DBlockLoadTransposeINTEL' : 6233,
+        'OpSubgroup2DBlockPrefetchINTEL' : 6234,
+        'OpSubgroup2DBlockStoreINTEL' : 6235,
+        'OpSubgroupMatrixMultiplyAccumulateINTEL' : 6237,
         'OpGroupIMulKHR' : 6401,
         'OpGroupFMulKHR' : 6402,
         'OpGroupBitwiseAndKHR' : 6403,
