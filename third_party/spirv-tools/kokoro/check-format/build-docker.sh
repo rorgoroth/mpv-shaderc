@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# Copyright (C) 2020 Google Inc.
+# Copyright (c) 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e # Fail on any error.
-set -x # Display commands being run.
+# Fail on any error.
+set -e
 
-license-checker --dir="$ROOT_DIR"
+# This is required to run any git command in the docker since owner will
+# have changed between the clone environment, and the docker container.
+# Marking the root of the repo as safe for ownership changes.
+git config --global --add safe.directory "$PWD"
+
+echo $(date): Check formatting...
+./utils/check_code_format.sh ${1:-main}
+echo $(date): check completed.

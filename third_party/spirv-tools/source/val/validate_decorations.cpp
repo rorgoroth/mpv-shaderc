@@ -1464,11 +1464,29 @@ spv_result_t CheckDecorationsOfBuffers(ValidationState_t& vstate) {
                      : (sc == spv::StorageClass::Workgroup ? "Workgroup"
                                                            : "StorageBuffer"));
 
-      const auto data_type = vstate.FindDef(data_type_id);
+      auto data_type = vstate.FindDef(data_type_id);
       scalar_block_layout =
           sc == spv::StorageClass::Workgroup
               ? vstate.options()->workgroup_scalar_block_layout
               : vstate.options()->scalar_block_layout;
+
+      // If the data type is an array that contains a Block- or
+      // BufferBlock-decorated struct, then use the struct for layout checks
+      // instead of the array. In this case, the array represents a descriptor
+      // array which should not have an explicit layout.
+      if (data_type->opcode() == spv::Op::OpTypeArray ||
+          data_type->opcode() == spv::Op::OpTypeRuntimeArray) {
+        const auto ele_type =
+            vstate.FindDef(data_type->GetOperandAs<uint32_t>(1u));
+        if (ele_type->opcode() == spv::Op::OpTypeStruct &&
+            (vstate.HasDecoration(ele_type->id(), spv::Decoration::Block) ||
+             vstate.HasDecoration(ele_type->id(),
+                                  spv::Decoration::BufferBlock))) {
+          data_type = ele_type;
+          data_type_id = ele_type->id();
+        }
+      }
+
       // Assume uniform storage class uses block rules unless we see a
       // BufferBlock decorated struct in the data type.
       bool bufferRules = sc == spv::StorageClass::Uniform ? false : true;
@@ -1514,7 +1532,8 @@ spv_result_t CheckDecorationsCompatibility(ValidationState_t& vstate) {
   // to the same id.
   static const spv::Decoration mutually_exclusive_per_id[][2] = {
       {spv::Decoration::Block, spv::Decoration::BufferBlock},
-      {spv::Decoration::Restrict, spv::Decoration::Aliased}};
+      {spv::Decoration::Restrict, spv::Decoration::Aliased},
+      {spv::Decoration::RestrictPointer, spv::Decoration::AliasedPointer}};
   static const auto num_mutually_exclusive_per_id_pairs =
       sizeof(mutually_exclusive_per_id) / (2 * sizeof(spv::Decoration));
 
@@ -1897,7 +1916,7 @@ spv_result_t CheckComponentDecoration(ValidationState_t& vstate,
     if (!vstate.IsIntScalarOrVectorType(type_id) &&
         !vstate.IsFloatScalarOrVectorType(type_id)) {
       return vstate.diag(SPV_ERROR_INVALID_ID, &inst)
-             << vstate.VkErrorID(4924)
+             << vstate.VkErrorID(10583)
              << "Component decoration specified for type "
              << vstate.getIdName(type_id) << " that is not a scalar or vector";
     }
