@@ -56,6 +56,8 @@ if(GLSLANG_TESTS)
             ${CMAKE_CURRENT_SOURCE_DIR}/LiveTraverser.FromFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Pp.FromFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Spv.FromFile.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/StructName.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/SpvPatternTest.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/VkRelaxed.FromFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/GlslMapIO.FromFile.cpp)
 
@@ -75,7 +77,8 @@ if(GLSLANG_TESTS)
         # doesn't have to specify the --test-root option in the normal
         # case that you want to use the tests from the same source tree.
         target_compile_definitions(glslangtests
-                                   PRIVATE GLSLANG_TEST_DIRECTORY="${GLSLANG_TEST_DIRECTORY}")
+                                   PRIVATE GLSLANG_TEST_DIRECTORY="${GLSLANG_TEST_DIRECTORY}"
+                                   PRIVATE GLSLANG_TEST_BUILD=1)
         target_include_directories(glslangtests PRIVATE
                                    ${CMAKE_CURRENT_SOURCE_DIR}
                                    ${PROJECT_SOURCE_DIR}

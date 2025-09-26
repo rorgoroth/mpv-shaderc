@@ -293,6 +293,7 @@ const char* const E_GL_NV_gpu_shader5                           = "GL_NV_gpu_sha
 
 // ARM
 const char* const E_GL_ARM_shader_core_builtins                 = "GL_ARM_shader_core_builtins";
+const char* const E_GL_ARM_tensors                              = "GL_ARM_tensors";
 
 // Arrays of extensions for the above viewportEXTs duplications
 
@@ -303,6 +304,7 @@ const int Num_viewportEXTs = sizeof(viewportEXTs) / sizeof(viewportEXTs[0]);
 const char* const E_GL_QCOM_image_processing                    = "GL_QCOM_image_processing";
 const char* const E_GL_QCOM_image_processing2                   = "GL_QCOM_image_processing2";
 const char* const E_GL_QCOM_tile_shading                        = "GL_QCOM_tile_shading";
+const char* const E_GL_QCOM_cooperative_matrix_conversion       = "GL_QCOM_cooperative_matrix_conversion";
 
 // AEP
 const char* const E_GL_ANDROID_extension_pack_es31a             = "GL_ANDROID_extension_pack_es31a";

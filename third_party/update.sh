@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-SHADERC="8c2e602ce440b7739c95ff3d69cecb1adf6becda"
-GLSLANG="efd24d75bcbc55620e759f6bf42c45a32abac5f8"
-SPIRVHEADERS="2a611a970fdbc41ac2e3e328802aed9985352dca"
-SPIRVTOOLS="33e02568181e3312f49a3cf33df470bf96ef293a"
+SHADERC="c7e73e87aebdafa98e57809e0357e3d3285540aa"
+GLSLANG="d213562e35573012b6348b2d584457c3704ac09b"
+SPIRVHEADERS="01e0577914a75a2569c846778c2f93aa8e6feddd"
+SPIRVTOOLS="19042c8921f35f7bec56b9e5c96c5f5691588ca8"
 
 rm -- *.tar.gz
 
@@ -16,6 +16,7 @@ rm -rf -- glslang
 rm -rf -- spirv-headers
 rm -rf -- spirv-tools
 rm -rf -- shaderc
+rm -rfv {Android.mk,CMakeLists.txt,LICENSE.glslang,LICENSE.spirv-tools}
 
 for i in *.tar.gz
 do
