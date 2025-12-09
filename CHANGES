@@ -1,5 +1,8 @@
 Revision history for Shaderc
 
+v2025.5
+ - Update dependencies
+
 v2025.4
  - Update dependencies
  - Add option to set max SPIR-V ID bound.
