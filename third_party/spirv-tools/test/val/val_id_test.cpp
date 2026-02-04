@@ -1160,9 +1160,9 @@ TEST_P(ValidateIdWithMessage, OpTypeStructOpaqueTypeBad) {
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions(SPV_ENV_VULKAN_1_0));
   EXPECT_THAT(getDiagnosticString(),
               AnyVUID("VUID-StandaloneSpirv-None-04667"));
-  EXPECT_THAT(
-      getDiagnosticString(),
-      HasSubstr(make_message("OpTypeStruct must not contain an opaque type")));
+  EXPECT_THAT(getDiagnosticString(),
+              HasSubstr(make_message(
+                  "OpTypeStruct must not contain an invalid opaque type")));
 }
 
 TEST_P(ValidateIdWithMessage, OpTypePointerGood) {
@@ -4176,10 +4176,46 @@ OpFunctionEnd
   getValidatorOptions()->relax_logical_pointer = true;
   CompileSuccessfully(spirv);
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
-  EXPECT_THAT(
-      getDiagnosticString(),
-      HasSubstr("result type (OpTypeMatrix) does not match the type that "
-                "results from indexing into the base <id> (OpTypeFloat)."));
+  EXPECT_THAT(getDiagnosticString(),
+              HasSubstr("result type <id> '6[%mat4v3float]' (OpTypeMatrix) "
+                        "does not match the type that results from indexing "
+                        "into the base <id> '4[%float]' (OpTypeFloat)"));
+}
+
+TEST_P(AccessChainInstructionTest, AccessChainDifferentIntTypes) {
+  std::string spirv = R"(
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %main "main" %_
+               OpExecutionMode %main LocalSize 1 1 1
+               OpDecorate %_arr_uint_uint_32 ArrayStride 4
+               OpDecorate %SSBO Block
+               OpMemberDecorate %SSBO 0 Offset 0
+               OpDecorate %_ Binding 0
+               OpDecorate %_ DescriptorSet 0
+       %void = OpTypeVoid
+          %4 = OpTypeFunction %void
+       %uint = OpTypeInt 32 0
+    %uint_32 = OpConstant %uint 32
+%_arr_uint_uint_32 = OpTypeArray %uint %uint_32
+       %SSBO = OpTypeStruct %_arr_uint_uint_32
+%_ptr_StorageBuffer_SSBO = OpTypePointer StorageBuffer %SSBO
+          %_ = OpVariable %_ptr_StorageBuffer_SSBO StorageBuffer
+        %int = OpTypeInt 32 1
+      %int_0 = OpConstant %int 0
+     %uint_1 = OpConstant %uint 1
+%ptr_ssbo_int = OpTypePointer StorageBuffer %int
+       %main = OpFunction %void None %4
+          %6 = OpLabel
+         %18 = OpAccessChain %ptr_ssbo_int %_ %int_0 %int_0
+               OpReturn
+               OpFunctionEnd
+  )";
+  CompileSuccessfully(spirv.c_str(), SPV_ENV_VULKAN_1_3);
+  EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions(SPV_ENV_VULKAN_1_3));
+  EXPECT_THAT(getDiagnosticString(),
+              HasSubstr("The types must be the exact same Id, so the two types "
+                        "referenced are slighlty different"));
 }
 
 // Valid: 255 indexes passed to the access chain instruction. Limit is 255.
@@ -4375,10 +4411,11 @@ TEST_P(AccessChainInstructionTest,
 OpReturn
 OpFunctionEnd
   )";
-  const std::string expected_err = instr +
-                                   " result type (OpTypeFloat) does not match "
-                                   "the type that results from indexing into "
-                                   "the base <id> (OpTypeVector).";
+  const std::string expected_err =
+      instr +
+      " result type <id> '4[%float]' (OpTypeFloat) does not match the type "
+      "that results from indexing into the base <id> '18[%v4float]' "
+      "(OpTypeVector).";
   getValidatorOptions()->relax_logical_pointer = true;
   CompileSuccessfully(spirv);
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
@@ -4532,10 +4569,11 @@ TEST_P(AccessChainInstructionTest,
 OpReturn
 OpFunctionEnd
   )";
-  const std::string expected_err = instr +
-                                   " result type (OpTypeMatrix) does not match "
-                                   "the type that results from indexing into "
-                                   "the base <id> (OpTypeFloat).";
+  const std::string expected_err =
+      instr +
+      " result type <id> '6[%mat4v3float]' (OpTypeMatrix) does not match the "
+      "type that results from indexing into the base <id> '4[%float]' "
+      "(OpTypeFloat).";
   getValidatorOptions()->relax_logical_pointer = true;
   CompileSuccessfully(spirv);
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
@@ -4981,6 +5019,40 @@ TEST_P(ValidateIdWithMessage, OpVectorShuffleFloatGood) {
   EXPECT_EQ(SPV_SUCCESS, ValidateInstructions());
 }
 
+TEST_P(ValidateIdWithMessage, OpVectorIdShuffleFloatGood) {
+  std::string spirv = "OpCapability LongVectorEXT\n" + kOpCapabilitySetup +
+                      kOpVariablePtrSetUp +
+                      "OpExtension \"SPV_EXT_long_vector\"" + R"(
+OpMemoryModel Logical GLSL450
+%float = OpTypeFloat 32
+%uint = OpTypeInt 32 0
+%u2 = OpConstant %uint 2
+%u3 = OpConstant %uint 3
+%u4 = OpConstant %uint 4
+%vec2 = OpTypeVectorIdEXT %float %u2
+%vec3 = OpTypeVectorIdEXT %float %u3
+%vec4 = OpTypeVectorIdEXT %float %u4
+%ptr_vec2 = OpTypePointer Function %vec2
+%ptr_vec3 = OpTypePointer Function %vec3
+%float_1 = OpConstant %float 1
+%float_2 = OpConstant %float 2
+%1 = OpConstantComposite %vec2 %float_2 %float_1
+%2 = OpConstantComposite %vec3 %float_1 %float_2 %float_2
+%3 = OpTypeFunction %vec4
+%4 = OpFunction %vec4 None %3
+%5 = OpLabel
+%var = OpVariable %ptr_vec2 Function %1
+%var2 = OpVariable %ptr_vec3 Function %2
+%6 = OpLoad %vec2 %var
+%7 = OpLoad %vec3 %var2
+%8 = OpVectorShuffle %vec4 %6 %7 4 3 1 0xffffffff
+     OpReturnValue %8
+     OpFunctionEnd)";
+
+  CompileSuccessfully(spirv.c_str());
+  EXPECT_EQ(SPV_SUCCESS, ValidateInstructions());
+}
+
 TEST_P(ValidateIdWithMessage, OpVectorShuffleScalarResultType) {
   std::string spirv = kGLSL450MemoryModel + R"(
 %float = OpTypeFloat 32
@@ -5001,7 +5073,7 @@ TEST_P(ValidateIdWithMessage, OpVectorShuffleScalarResultType) {
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
   EXPECT_THAT(getDiagnosticString(),
               HasSubstr(make_message(
-                  "Result Type of OpVectorShuffle must be OpTypeVector.")));
+                  "Result Type of OpVectorShuffle must be a vector type.")));
 }
 
 TEST_P(ValidateIdWithMessage, OpVectorShuffleComponentCount) {
@@ -5048,7 +5120,7 @@ TEST_P(ValidateIdWithMessage, OpVectorShuffleVector1Type) {
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
   EXPECT_THAT(
       getDiagnosticString(),
-      HasSubstr(make_message("The type of Vector 1 must be OpTypeVector.")));
+      HasSubstr(make_message("The type of Vector 1 must be a vector type.")));
 }
 
 TEST_P(ValidateIdWithMessage, OpVectorShuffleVector2Type) {
@@ -5071,7 +5143,7 @@ TEST_P(ValidateIdWithMessage, OpVectorShuffleVector2Type) {
   EXPECT_EQ(SPV_ERROR_INVALID_ID, ValidateInstructions());
   EXPECT_THAT(
       getDiagnosticString(),
-      HasSubstr(make_message("The type of Vector 2 must be OpTypeVector.")));
+      HasSubstr(make_message("The type of Vector 2 must be a vector type.")));
 }
 
 TEST_P(ValidateIdWithMessage, OpVectorShuffleVector1ComponentType) {
