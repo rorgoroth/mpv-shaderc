@@ -296,10 +296,14 @@ const char* const E_GL_NV_cluster_acceleration_structure        = "GL_NV_cluster
 const char* const E_GL_NV_linear_swept_spheres                  = "GL_NV_linear_swept_spheres";
 const char* const E_GL_NV_gpu_shader5                           = "GL_NV_gpu_shader5";
 const char* const E_GL_NV_push_constant_bank                    = "GL_NV_push_constant_bank";
+const char* const E_GL_NV_explicit_typecast                     = "GL_NV_explicit_typecast";
 
 // ARM
 const char* const E_GL_ARM_shader_core_builtins                 = "GL_ARM_shader_core_builtins";
 const char* const E_GL_ARM_tensors                              = "GL_ARM_tensors";
+const char* const E_GL_ARM_tensors_bfloat16                     = "GL_ARM_tensors_bfloat16";
+const char* const E_GL_ARM_tensors_float_e5m2                   = "GL_ARM_tensors_float_e5m2";
+const char* const E_GL_ARM_tensors_float_e4m3                   = "GL_ARM_tensors_float_e4m3";
 
 // Arrays of extensions for the above viewportEXTs duplications
 

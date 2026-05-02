@@ -1381,6 +1381,14 @@ Id Builder::makeDebugCompilationUnit() {
     module.mapInstruction(sourceInst);
     nonSemanticShaderCompilationUnitId = resultId;
 
+    // In the case of non-semantic shader debug info, preserve source text for every include
+    // even if no debug scope or line record ends up referencing that file.
+    if (emitNonSemanticShaderDebugSource) {
+        for (const auto& includeFile : includeFiles) {
+            makeDebugSource(includeFile.first);
+        }
+    }
+
     // We can reasonably assume that makeDebugCompilationUnit will be called before any of
     // debug-scope stack. Function scopes and lexical scopes will occur afterward.
     assert(currentDebugScopeId.empty());
@@ -3069,7 +3077,7 @@ Instruction* Builder::createDescHeapLoadStoreBaseRemap(Id baseId, Op op)
         baseVal = chain->getResultId();
         clearAccessChain();
     } else if (instOp != Op::OpUntypedAccessChainKHR) {
-        assert("Not a untyped load type");
+        assert(false && "Not a untyped load type");
     }
 
     Instruction* inst = nullptr;
